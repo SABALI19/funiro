@@ -16,7 +16,7 @@ function Home() {
     Lorem ipsum dolor sit amet consectetur, adipisicing elit.
        laudantium deserunt totam illo quam officia.
    </p>
-   <button className="px-16 py-4 font-bold bg-amber-600 text-amber-50 text-base text-sm">Buy Now</button>
+   <button className="px-16 py-4 font-bold bg-amber-600 text-amber-50 text-base ">Buy Now</button>
 </div>
       
     </div>
