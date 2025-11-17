@@ -4,8 +4,9 @@ function HeroSection({ heroHeading, heroTitle }) {
   return (
     <>
       <div
-        className="hero-section w-full h-80 bg-center bg-cover flex flex-col justify-center gap-4"
-        style={{ backgroundImage: `url(./images/hero-background-image.svg)` }}
+       className="hero-section w-full h-80 bg-center bg-cover flex flex-col justify-center gap-4 sm:w-1/2 md:w-full lg:w-full"
+
+        style={{ backgroundImage: `url(./images/hero-background-image.svg)`}}
       >
       
       <div>
