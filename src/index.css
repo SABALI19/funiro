@@ -8,6 +8,54 @@
   --shadow-custom: 0 4px 4px rgba(255, 0, 0, 0.2);
 }
 
+
+@layer utilities {
+  /* Smooth, responsive, full-screen horizontal slide */
+  @keyframes slideXFull {
+    0% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(calc(100vw - 100%));
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  /* Optional fade + slide combined */
+  @keyframes fadeInSlide {
+    0% {
+      opacity: 0;
+      transform: translateX(-25px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* USE THIS IF YOU WANT ALWAYS RUNNING ANIMATION */
+  .animate-slide-x-full {
+    animation: slideXFull 7s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  }
+
+  /* INITIAL HIDDEN STATE */
+  .animate-when-visible {
+    opacity: 0;
+    transform: translateX(-25px);
+  }
+
+  /* ACTIVE STATE WHEN THE ELEMENT IS VISIBLE */
+  .animate-when-visible.is-visible {
+    opacity: 1;
+    animation:
+      fadeInSlide 0.8s ease-out forwards,     /* fade in */
+      slideXFull 7s cubic-bezier(0.45, 0, 0.55, 1) infinite 1s; /* start sliding after fade */
+  }
+}
+
+
 :root {
   --color-pink: #FFF3E3;
   --color-brightgrey: #B0B0B0;
@@ -24,3 +72,9 @@
 .bg-color-green { background-color: var(--color-green); }
 .bg-color-peach { background-color: var(--color-peach); }
 .bg-color-gold { background-color: var(--color-gold); }
+
+html, body {
+  font-family: var(--font-poppins);
+   overflow-x: hidden;
+
+}
