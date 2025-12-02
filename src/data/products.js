@@ -1,3 +1,4 @@
+// data/products.js
 import Syltherine from "../assets/images/syltherine.svg";
 import Leviosa from "../assets/images/leviosa.svg";
 import Lolito from "../assets/images/lolito.svg";
@@ -17,44 +18,36 @@ const products = [
     image: Syltherine,
     images: [Syltherine, SideOne, SideTwo, SideThree],
     name: "Syltherine",
-    description: "Stylish cafe chair.",
-    price: "$56.00",
-    discount: "-10%",
+    description: "Stylish cafe chair",
+    price: 56.00, // Changed to number
+    originalPrice: 100.00, // Added for calculations
+    category: "chairs",
+    brand: "ModernLiving",
+    discount: "-30%",
     discountPrice: "$100",
-    path: "/productPage",
-    reviews: [
-      {
-        id: 1,
-        user: "Mike Johnson",
-        rating: 5,
-        comment: "Absolutely love this chair! Worth every penny.",
-        date: "2024-01-12"
-      }
-    ],
-    averageRating: 5,
-    reviewCount: 1
+    newItem: false,
+    inStock: true,
+    rating: 4.8,
+    reviewCount: 24,
+    tags: ["modern", "minimalist", "cafe"]
   },
   {
     id: 2,
     image: Leviosa,
     images: [Leviosa, SideOne, SideTwo, SideThree],
     name: "Leviosa",
-    description: "Stylish Cafe chair.",
-    price: "$2500.00",
+    description: "Stylish Cafe chair",
+    price: 2500.00,
+    originalPrice: 2941.18,
+    category: "chairs",
+    brand: "LuxurySeating",
     discount: "-15%",
     discountPrice: "$100",
-    path: "/shop",
-    reviews: [
-      {
-        id: 1,
-        user: "Mike Johnson",
-        rating: 5,
-        comment: "Absolutely love this chair! Worth every penny.",
-        date: "2024-01-12"
-      }
-    ],
-    averageRating: 5,
-    reviewCount: 1
+    newItem: false,
+    inStock: true,
+    rating: 4.9,
+    reviewCount: 18,
+    tags: ["luxury", "ergonomic"]
   },
   {
     id: 3,
@@ -62,217 +55,144 @@ const products = [
     images: [Lolito, SideOne, SideTwo, SideThree],
     name: "Lolito",
     description: "Luxury big sofa",
-    price: "$560.00",
+    price: 560.00,
+    originalPrice: 800.00,
+    category: "sofas",
+    brand: "ComfortPlus",
     discount: "-30%",
     discountPrice: "$-30",
-    reviews: [
-      {
-        id: 1,
-        user: "John Doe",
-        rating: 5,
-        comment: "Excellent quality and very comfortable!",
-        date: "2024-01-15"
-      }
-    ],
-    averageRating: 4.5,
-    reviewCount: 2
+    newItem: false,
+    inStock: true,
+    rating: 4.7,
+    reviewCount: 32,
+    tags: ["luxury", "large", "comfort"]
   },
   {
     id: 4,
     image: Respira,
     images: [Respira, SideOne, SideTwo, SideThree],
     name: "Respira",
-    description: "Stylish cafe chair.",
-    price: "$21,600.00",
+    description: "Outdoor lounge chair",
+    price: 21600.00,
+    originalPrice: 21600.00,
+    category: "outdoor",
+    brand: "GardenElegance",
     discount: null,
     discountPrice: null,
-    newItem: "new",
-    reviews: [
-      {
-        id: 1,
-        user: "John Doe",
-        rating: 5,
-        comment: "Excellent quality and very comfortable!",
-        date: "2024-01-15"
-      }
-    ],
-    averageRating: 4.5,
-    reviewCount: 2
+    newItem: true,
+    inStock: true,
+    rating: 4.6,
+    reviewCount: 12,
+    tags: ["outdoor", "weather-resistant"]
   },
   {
     id: 5,
     image: Grifo,
     images: [Grifo, SideOne, SideTwo, SideThree],
     name: "Grifo",
-    description: "Stylish cafe chairl.",
-    price: "$700.00",
+    description: "Modern side table",
+    price: 700.00,
+    originalPrice: 700.00,
+    category: "tables",
+    brand: "ModernLiving",
     discount: null,
     newItem: "new",
     discountPrice: "$100",
-    reviews: [
-      {
-        id: 1,
-        user: "John Doe",
-        rating: 5,
-        comment: "Excellent quality and very comfortable!",
-        date: "2024-01-15"
-      }
-    ],
-    averageRating: 4.5,
-    reviewCount: 2
+    inStock: false,
+    rating: 4.4,
+    reviewCount: 8,
+    tags: ["modern", "side-table", "minimalist"]
   },
   {
     id: 6,
     image: Muggo,
     images: [Muggo, SideOne, SideTwo, SideThree],
     name: "Muggo",
-    description: "Outdoor bar table and stool. ",
-    price: "$56,000.00",
+    description: "Outdoor bar table and stool",
+    price: 560.00,
+    originalPrice: 622.22,
+    category: "outdoor",
+    brand: "PatioDesigns",
     discount: "-10%",
     discountPrice: "$100",
-    reviews: [
-      {
-        id: 1,
-        user: "John Doe",
-        rating: 5,
-        comment: "Excellent quality and very comfortable!",
-        date: "2024-01-15"
-      }
-    ],
-    averageRating: 4.5,
-    reviewCount: 2
+    newItem: false,
+    inStock: true,
+    rating: 4.5,
+    reviewCount: 15,
+    tags: ["outdoor", "bar", "stool"]
   },
   {
     id: 7,
     image: Pingky,
     images: [Pingky, SideOne, SideTwo, SideThree],
     name: "Pingky",
-    description: "Luxury big sofas.",
-    price: "$3,500.00",
+    description: "Luxury big sofa",
+    price: 3500.00,
+    originalPrice: 3500.00,
+    category: "sofas",
+    brand: "ComfortPlus",
     discount: null,
     newItem: "new",
     discountPrice: "$100",
-    reviews: [
-      {
-        id: 1,
-        user: "John Doe",
-        rating: 5,
-        comment: "Excellent quality and very comfortable!",
-        date: "2024-01-15"
-      }
-    ],
-    averageRating: 4.5,
-    reviewCount: 2
+    inStock: true,
+    rating: 4.9,
+    reviewCount: 27,
+    tags: ["luxury", "sectional", "premium"]
   },
   {
     id: 8,
     image: Potty,
     images: [Potty, SideOne, SideTwo, SideThree],
     name: "Potty",
-    description: "Stylish cafe chair.",
-    price: "$5,600.00",
+    description: "Decorative plant pot",
+    price: 56.00,
+    originalPrice: 62.22,
+    category: "decor",
+    brand: "HomeGarden",
     discount: "-10%",
     discountPrice: "$100",
-    reviews: [
-      {
-        id: 1,
-        user: "John Doe",
-        rating: 5,
-        comment: "Excellent quality and very comfortable!",
-        date: "2024-01-15"
-      }
-    ],
-    averageRating: 4.5,
-    reviewCount: 2
+    newItem: false,
+    inStock: true,
+    rating: 4.3,
+    reviewCount: 21,
+    tags: ["decor", "plant", "ceramic"]
   },
   {
-    id: 1,
-    image: Syltherine,
+    id: 9,
+    image: Syltherine, // Different image for demo
     images: [Syltherine, SideOne, SideTwo, SideThree],
-    name: "Syltherine",
-    description: "Stylish cafe chair.",
-    price: "$56.00",
-    discount: "-10%",
-    discountPrice: "$100",
-    path: "/productPage",
-    reviews: [
-      {
-        id: 1,
-        user: "Mike Johnson",
-        rating: 5,
-        comment: "Absolutely love this chair! Worth every penny.",
-        date: "2024-01-12"
-      }
-    ],
-    averageRating: 5,
-    reviewCount: 1
-  },
-  {
-    id: 2,
-    image: Leviosa,
-    images: [Leviosa, SideOne, SideTwo, SideThree],
-    name: "Leviosa",
-    description: "Stylish Cafe chair.",
-    price: "$2500.00",
-    discount: "-15%",
-    discountPrice: "$100",
-    path: "/shop",
-    reviews: [
-      {
-        id: 1,
-        user: "Mike Johnson",
-        rating: 5,
-        comment: "Absolutely love this chair! Worth every penny.",
-        date: "2024-01-12"
-      }
-    ],
-    averageRating: 5,
-    reviewCount: 1
-  },
-  {
-    id: 3,
-    image: Lolito,
-    images: [Lolito, SideOne, SideTwo, SideThree],
-    name: "Lolito",
-    description: "Luxury big sofa",
-    price: "$560.00",
-    discount: "-30%",
-    discountPrice: "$-30",
-    reviews: [
-      {
-        id: 1,
-        user: "John Doe",
-        rating: 5,
-        comment: "Excellent quality and very comfortable!",
-        date: "2024-01-15"
-      }
-    ],
-    averageRating: 4.5,
-    reviewCount: 2
-  },
-  {
-    id: 4,
-    image: Respira,
-    images: [Respira, SideOne, SideTwo, SideThree],
-    name: "Respira",
-    description: "Stylish cafe chair.",
-    price: "$21,600.00",
+    name: "Syltherine Pro",
+    description: "Premium cafe chair",
+    price: 89.00,
+    originalPrice: 89.00,
+    category: "chairs",
+    brand: "ModernLiving",
     discount: null,
     discountPrice: null,
     newItem: "new",
-    reviews: [
-      {
-        id: 1,
-        user: "John Doe",
-        rating: 5,
-        comment: "Excellent quality and very comfortable!",
-        date: "2024-01-15"
-      }
-    ],
-    averageRating: 4.5,
-    reviewCount: 2
+    inStock: true,
+    rating: 4.8,
+    reviewCount: 16,
+    tags: ["premium", "cafe", "ergonomic"]
   },
-  
+  {
+    id: 10,
+    image: Leviosa, // Different image for demo
+    images: [Leviosa, SideOne, SideTwo, SideThree],
+    name: "Leviosa Executive",
+    description: "Executive office chair",
+    price: 3200.00,
+    originalPrice: 3200.00,
+    category: "chairs",
+    brand: "OfficePro",
+    discount: null,
+    discountPrice: null,
+    newItem: false,
+    inStock: false,
+    rating: 4.7,
+    reviewCount: 9,
+    tags: ["office", "executive", "ergonomic"]
+  }
 ];
 
 export default products;

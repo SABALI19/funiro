@@ -1,5 +1,5 @@
 import React,{useState, useEffect} from 'react';
-import PaginationDots from '../PaginationDots';
+
 
 
 const ImageCarousel = ({images, interval = 4000}) => {
@@ -11,7 +11,7 @@ const ImageCarousel = ({images, interval = 4000}) => {
       setCurrent((prev) =>(prev + 1) % images.length);
     },interval);
 
-    return () => clearInterval(slides);
+    return () => clearInterval(slides); 
   }, [images.length, interval]);
 
 

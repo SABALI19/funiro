@@ -7,7 +7,7 @@ const Breadcrumbs = ({ productName }) => {
     <div>
       <nav className="w-full bg-color-peach p-10 aria-label font-poppins text-[#616161]">
         <ol className="flex items-center gap-2 ">
-          {/* // Fix the Home link to include proper routing */}
+          {/* // Fixed the Home link to include proper routing */}
           <li>
             <Link
               to="/"
@@ -23,7 +23,7 @@ const Breadcrumbs = ({ productName }) => {
 
           <li>
             <Link
-              to="/"
+              to="/shop"
               className="hover:text-[#B88E2F] transition-colors duration-200"
             >
               shop

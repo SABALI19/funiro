@@ -72,6 +72,7 @@ const Footer = () => {
               <input 
                 type="email" 
                 placeholder="Enter your Email address"
+                required
                 className="flex-1 border-b-2 border-b-[#9f9f9f] pb-2 text-black bg-transparent placeholder-gray-500 text-sm sm:text-base focus:outline-none focus:border-b-[#B88E2F] transition-colors w-full text-center sm:text-left"
               />
               <button className="border-b-2 border-b-[#9f9f9f] text-black font-medium pb-2 hover:border-b-[#B88E2F] hover:text-[#B88E2F] transition-colors whitespace-nowrap text-sm sm:text-base">

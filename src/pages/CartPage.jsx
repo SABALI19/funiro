@@ -1,11 +1,16 @@
+import { Navigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import HeroSection from "../components/HeroSection";
 import Promise from "../components/Promise";
 import { useCart } from "../context/CartContext";
 import { Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
 
 const CartPage = () => {
   const { cart, removeFromCart, updateQuantity, cartSubtotal } = useCart();
+
+  const navigate = useNavigate(); //to navigate to checkout page
 
   // Debug: Check what's in the cart
   console.log("Cart contents:", cart);
@@ -192,7 +197,11 @@ const CartPage = () => {
                   : 'hover:bg-gray-800 hover:text-white'
               }`}
               disabled={cart.length === 0}
+              onClick={() =>{
+                if (cart.length > 0) navigate('/checkout')
+              }}
             >
+              
               {cart.length === 0 ? 'Cart is Empty' : 'Check Out'}
             </button>
 
@@ -206,9 +215,8 @@ const CartPage = () => {
       <div>
         <Promise/>
       </div>
-      <div>
-        <Footer/>
-      </div>
+      
+      
     </div>
   );
 };
