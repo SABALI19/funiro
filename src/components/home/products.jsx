@@ -3,13 +3,12 @@ import Button from "../Button";
 import { Link } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
 
-function Products({ showButton = true, products = [] }) {  // Accept products as prop
+function Products({ showButton = true, products = [] }) {
   const { addToCart } = useCart();
 
   const handleAddToCart = (product, e) => {
     e.preventDefault();
     e.stopPropagation();
-    
     addToCart({
       id: product.id,
       name: product.name,
@@ -21,76 +20,80 @@ function Products({ showButton = true, products = [] }) {  // Accept products as
 
   return (
     <>
-      <div>
-        <div className="flex flex-wrap justify-center gap-6 p-6 bg-[]">
-          {products.map((product) => (  // Use the products prop
-            <div key={product.id} className="relative group">
-              <Link to={`/products/${product.id}`}>
-                <div className="bg-[#F4F5F7] shadow-md w-70 hover:shadow-lg transition-shadow">
-                  <div className="relative">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-80 object-cover"
-                    />
-
-                    {/* discount & newItem badges */}
-                    <div className="top-4 right-6 absolute flex flex-col items-end space-y-2">
-                      {product.discount && (
-                        <span className="top-4 right-6 p-3 shadow-5xl font-poppins text-amber-50 rounded-2xl bg-amber-900">
-                          {product.discount}
-                        </span>
-                      )}
-
-                      {product.newItem && (
-                        <span className="font-poppins p-4 rounded-2xl text-sm bg-[#2EC1AC] shadow-sm text-amber-50">
-                          {product.newItem}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Add to Cart Overlay */}
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
-                      <button 
-                        className="bg-white text-black px-6 py-3 font-semibold hover:bg-[#B88E2F] hover:text-white transition-colors"
-                        onClick={(e) => handleAddToCart(product, e)}
-                      >
-                        Add to Cart
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* product info */}
-                  <div className="w-full p-4">
-                    <div className="text-left">
-                      <h2 className="font-semibold text-xl font-poppins">{product.name}</h2>
-                      <p className="text-color-darkgrey font-poppins font-medium">
-                        {product.description}
-                      </p>
-                    </div>
-
-                    <div className="gap-30 flex">
-                      <span className="font-poppins text-lg font-bold">{product.price}</span>
-                      <span className="color-brightgrey font-poppins text-[#B0B0B0] text-base">
-                        {product.discountPrice}
-                      </span>
-                    </div>
-                  </div>
+      {/* Products Grid - Responsive columns */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 px-4 sm:px-6 lg:px-8 py-8">
+        {products.map((product) => (
+          <Link
+            to={`/product/${product.id}`}
+            key={product.id}
+            className="group relative bg-gray-100 overflow-hidden transition-all duration-300 hover:shadow-xl"
+          >
+            {/* Discount & newItem badges */}
+            <div className="absolute top-3 sm:top-4 right-3 sm:right-4 z-10 flex flex-col gap-2">
+              {product.discount && (
+                <div className="bg-red-500 text-white rounded-full w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center text-xs sm:text-sm font-semibold">
+                  {product.discount}
                 </div>
-              </Link>
+              )}
+              {product.newItem && (
+                <div className="bg-green-500 text-white rounded-full w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center text-xs sm:text-sm font-semibold">
+                  {product.newItem}
+                </div>
+              )}
             </div>
-          ))}
-        </div>
 
-        {/* Show More Button - You can remove this since you have pagination */}
-        {showButton && (
-          <div className="text-center mt-8">
-            <Button variant="secondary" size="md">
-              Show More
-            </Button>
-          </div>
-        )}
+            {/* Product Image */}
+            <div className="relative overflow-hidden aspect-square">
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+              />
+
+              {/* Add to Cart Overlay */}
+              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                <Button
+                  variant="primary"
+                  size="md"
+                  onClick={(e) => handleAddToCart(product, e)}
+                  className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300"
+                >
+                  Add to Cart
+                </Button>
+              </div>
+            </div>
+
+            {/* Product Info */}
+            <div className="p-4 sm:p-5 lg:p-6 bg-gray-100">
+              <h3 className="font-semibold text-base sm:text-lg lg:text-xl text-gray-800 mb-2 truncate">
+                {product.name}
+              </h3>
+              <p className="text-gray-500 text-xs sm:text-sm mb-3 line-clamp-2">
+                {product.description}
+              </p>
+              <div className="flex items-center gap-2 sm:gap-3">
+                <span className="font-semibold text-base sm:text-lg lg:text-xl text-gray-900">
+                  {product.price}
+                </span>
+                {product.discountPrice && (
+                  <span className="text-gray-400 line-through text-sm sm:text-base">
+                    {product.discountPrice}
+                  </span>
+                )}
+              </div>
+            </div>
+          </Link>
+        ))}
       </div>
+
+      {/* Show More Button */}
+      {showButton && (
+        <div className="flex justify-center my-8 sm:my-10 lg:my-12 px-4">
+          <Button variant="outline" size="lg">
+            Show More
+          </Button>
+        </div>
+      )}
     </>
   );
 }
