@@ -3,23 +3,25 @@ import Showcase from "../../assets/images/showcase.svg";
 
 const ImageGrid = () => {
   return (
-    <div className="relative w-full flex justify-center items-center py-8 sm:py-12 md:py-16">
-      {/* Background Image */}
+    <div className="relative w-full flex justify-center items-center overflow-hidden">
+  
+      {/* Background Image with responsive top margin */}
       <img 
         src={Showcase} 
         alt="grid showcase" 
-        className="w-full h-auto object-cover" 
+        className="w-full mt-8 sm:mt-12 md:mt-16 lg:mt-20 xl:mt-[90px] object-cover" 
       />
 
-      {/* Overlay Text */}
-      <div className="absolute top-4 sm:top-8 md:top-12 lg:top-16 text-center px-4">
-        <p className="text-[#616161] font-poppins font-semibold text-xs sm:text-sm md:text-base lg:text-lg mb-1 sm:mb-2">
+      {/* Overlay Text - Responsive positioning */}
+      <div className="absolute top-2 sm:top-4 md:top-6 lg:top-8 xl:top-[50px] text-center px-4 w-full">
+        <p className="text-[#616161] font-poppins font-semibold text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl mb-1 sm:mb-2">
           Share your setup with
         </p>
-        <h3 className="text-[#3A3A3A] font-poppins font-bold text-xl sm:text-2xl md:text-3xl lg:text-[40px] tracking-[2px] sm:tracking-[3px] md:tracking-[5px]">
+        <h3 className="text-[#3A3A3A] font-poppins font-bold text-lg sm:text-2xl md:text-3xl lg:text-4xl xl:text-[40px] tracking-[1px] sm:tracking-[2px] md:tracking-[3px] lg:tracking-[4px] xl:tracking-[5px] leading-tight">
           #FuniroFurniture
         </h3>
       </div>
+
     </div>
   );
 };

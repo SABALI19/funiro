@@ -9,6 +9,10 @@ import CartPage from "./pages/CartPage";
 import { CartProvider } from "./context/CartContext";
 import Checkout from "./pages/Checkout";
 import Footer from "./components/Footer";
+import FavoritesPage from "./pages/FavoritesPage";
+import ProfilePage from "./pages/ProfilePage";
+import SearchProductPage from "./pages/SearchProductPage";
+
 
 
 
@@ -24,6 +28,9 @@ const App =  () => {
           <Route path='/shop' element={<Shop/>} />
           <Route path='/about' element={<About/>} />
           <Route path='/contact' element={<Contact/>} />
+          <Route path='/profile' element={<ProfilePage/>} />
+          <Route path='/favorites' element={<FavoritesPage/>} />
+          <Route path='/search' element={<SearchProductPage/>}/>
           <Route path='/product/:id' element={<ProductPage/>}/>
           <Route path="/cart" element={<CartPage/>}/>
           <Route path='/checkout' element={<Checkout/>}/>

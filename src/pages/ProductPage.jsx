@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import products from "../data/products";
 import Breadcrumbs from "../components/Breadcrumbs";
 import { useCart } from "../context/CartContext";
-
+import { AlertTriangle, CheckCircle } from "lucide-react";
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -14,6 +14,42 @@ const ProductPage = () => {
   );
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
+  
+  // Modal states
+  const [showModal, setShowModal] = useState(false);
+  const [modalType, setModalType] = useState(""); // 'warning' or 'success'
+  const [modalMessage, setModalMessage] = useState("");
+
+  // Function to play notification sound
+  const playNotificationSound = (type) => {
+    // Create audio context for different notification sounds
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    const audioContext = new AudioContextClass();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    if (type === "success") {
+      // Success sound - pleasant ascending tone
+      oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+      oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+      oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.3);
+    } else {
+      // Warning sound - attention-grabbing beep
+      oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+      oscillator.frequency.setValueAtTime(600, audioContext.currentTime + 0.1);
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.2);
+    }
+  };
 
   if (!product) {
     return (
@@ -43,6 +79,46 @@ const ProductPage = () => {
         ★
       </span>
     ));
+  };
+
+  // Handle add to cart with modal
+  const handleAddToCart = () => {
+    if (!selectedSize || !selectedColor) {
+      // Show warning modal
+      setModalType("warning");
+      if (!selectedSize && !selectedColor) {
+        setModalMessage("select size and color before adding to cart.");
+      } else if (!selectedSize) {
+        setModalMessage("select size before adding to cart.");
+      } else {
+        setModalMessage("select  color before adding to cart.");
+      }
+      setShowModal(true);
+      playNotificationSound("warning"); // Play warning sound
+      return;
+    }
+
+    // Add to cart
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: mainImage,
+      size: selectedSize,
+      color: selectedColor,
+      quantity: 1,
+    });
+
+    // Show success modal
+    setModalType("success");
+    setModalMessage(`${product.name} has been successfully added to your cart!`);
+    setShowModal(true);
+    playNotificationSound("success"); // Play success sound
+  };
+
+  // Close modal
+  const closeModal = () => {
+    setShowModal(false);
   };
 
   return (
@@ -148,25 +224,11 @@ const ProductPage = () => {
               1
             </button>
             <button
-              onClick={() => {
-                 if (!selectedSize || !selectedColor) {
-                  alert("Please select size and color before adding to cart.");
-                  return;
-                }
-                addToCart({
-                  id: product.id,
-                  name: product.name,
-                  price: product.price,
-                  image: mainImage,
-                  size: selectedSize,
-                  color: selectedColor,
-                  quantity: 1,
-                })
-               }
-              }
+              onClick={handleAddToCart}
               className="flex-1 px-8 py-3 bg-[#B88E2F] text-white rounded-lg font-semibold hover:bg-[#a07b26] transition-all duration-200"
             >
-              Add To Cart
+              <span className="hidden sm:inline">Add To Cart</span>
+              <span className="inline sm:hidden whitespace-nowrap">+ cart</span>
             </button>
 
             <button className="px-6 py-3 border-2 border-[#3A3A3A] text-[#3A3A3A] rounded-lg font-semibold hover:bg-gray-100 transition-all">
@@ -176,7 +238,48 @@ const ProductPage = () => {
         </div>
       </div>
 
-      {/* Additional product details can go below if needed */}
+      {/* Modal */}
+      {showModal && (
+  <div
+    className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn"
+    onClick={closeModal}
+  >
+    <div
+      className="bg-white rounded-2xl p-4 shadow-2xl animate-slideUp max-w-md w-85 mx-4"
+      onClick={(e) => e.stopPropagation()}
+    >
+      {/* Modal Icon */}
+      {modalType === "warning" ? (
+  <AlertTriangle className="text-5xl text-orange-500 mx-auto" />
+) : (
+  <CheckCircle className="text-5xl text-green-500 mx-auto" />
+)}
+
+      {/* Modal Title */}
+      <h2 className="text-lg font-bold text-center text-[#3A3A3A] mb-3">
+        {modalType === "warning" ? "Selection Required" : "Added to Cart!"}
+      </h2>
+
+      {/* Modal Message */}
+      <p className="text-center text-gray-600 text-sm mb-4">
+        {modalMessage}
+      </p>
+
+      {/* Modal Button */}
+      <button
+        onClick={closeModal}
+        className={`w-1/4 flex justify-center m-auto p-2 rounded-lg text-sm font-semibold text-white transition-all ${
+          modalType === "warning"
+            ? "bg-[#B88E2F] hover:bg-orange-600"
+            : "bg-[#B88E2F] hover:bg-[#a07b26]"
+        }`}
+      >
+        OK
+      </button>
+    </div>
+  </div>
+)}
+      
     </div>
   );
 };
