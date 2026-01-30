@@ -1,0 +1,3 @@
+- [x] Update EmailService.jsx to use VITE_APP_EMAILJS_* environment variables
+- [x] Update Checkout.jsx to navigate to order confirmation page after successful order placement
+- [x] Test the email sending functionality

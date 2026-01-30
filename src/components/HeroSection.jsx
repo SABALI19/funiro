@@ -18,11 +18,17 @@ function HeroSection({ heroHeading }) {
       'product': 'Product',
       'blog': 'Blog',
       'wishlist': 'Wishlist',
+      'order-confirmation': 'Order Confirmed',
+      'order': 'Order Details'
     };
     
-    // Check if this is a product ID parameter
+    // Check if this is a product ID parameter or order ID
     if (segment === params.id && params.id) {
       return isLast ? heroHeading : 'Product';
+    }
+    
+    if (segment === params.orderId && params.orderId) {
+      return isLast ? heroHeading : 'Order';
     }
     
     return nameMap[segment.toLowerCase()] || 
@@ -32,12 +38,12 @@ function HeroSection({ heroHeading }) {
   return (
     <div
       className="hero-section w-full h-80 bg-center bg-cover flex flex-col justify-center gap-4"
-      style={{ backgroundImage: `url(./images/hero-background-image.svg)` }}
+      style={{ backgroundImage: `url(/images/hero-background-image.svg)` }}
     >
       <div>
         <img
           className="w-25 mx-auto"
-          src="./images/hero-logo2.svg"
+          src="/images/hero-logo2.svg"
           alt="logo"
         />
         <h1 className="text-6xl font-bold text-center">{heroHeading}</h1>

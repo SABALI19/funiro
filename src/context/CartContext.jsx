@@ -1,6 +1,5 @@
-import { createContext, useContext, useState } from "react";
-
-const CartContext = createContext(null);
+import { useState } from "react";
+import { CartContext } from "./CartContextValue";
 
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
@@ -66,6 +65,12 @@ export const CartProvider = ({ children }) => {
     );
   };
 
+  // CLEAR CART - NEW FUNCTION
+  const clearCart = () => {
+    setCart([]);
+    localStorage.removeItem('cart'); // Also clear from localStorage if you're using it
+  };
+
   // SUBTOTAL - with NaN protection
   const cartSubtotal = cart.reduce(
     (total, item) => {
@@ -83,17 +88,11 @@ export const CartProvider = ({ children }) => {
         addToCart,
         removeFromCart,
         updateQuantity,
+        clearCart,        // ✅ Add this to the context value
         cartSubtotal
       }}
     >
       {children}
     </CartContext.Provider>
   );
-};
-
-export const useCart = () => {
-  const context = useContext(CartContext);
-  if (!context)
-    throw new Error("useCart must be used within CartProvider");
-  return context;
 };

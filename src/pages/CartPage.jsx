@@ -2,7 +2,7 @@ import { Navigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import HeroSection from "../components/HeroSection";
 import Promise from "../components/Promise";
-import { useCart } from "../context/CartContext";
+import { useCart } from "../hooks/useCart";
 import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 

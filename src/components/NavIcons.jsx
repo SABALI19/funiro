@@ -3,7 +3,7 @@ import cartIcon from "../icons/cart-icon.svg"
 import search from "../icons/search-icon.svg"
 import favorite from "../icons/favorite-icon.svg"
 import { NavLink } from "react-router-dom";
-import { useCart } from "../context/CartContext";
+import { useCart } from "../hooks/useCart";
 
 function NavIcons() {
 

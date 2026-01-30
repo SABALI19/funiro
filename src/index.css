@@ -79,7 +79,7 @@ html, body {
 
 }
 
-{/* Add custom animations to your global CSS or Tailwind config */}
+/* {Add custom animations to your global CSS or Tailwind config} */
       
         @keyframes fadeIn {
           from {

@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "../Button";
 import { Link } from "react-router-dom";
-import { useCart } from "../../context/CartContext";
+import { useCart } from "../../hooks/useCart";
 
 function Products({ showButton = true, products = [] }) {
   const { addToCart } = useCart();

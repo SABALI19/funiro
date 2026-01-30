@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import products from "../data/products";
 import Breadcrumbs from "../components/Breadcrumbs";
-import { useCart } from "../context/CartContext";
+import { useCart } from "../hooks/useCart";
 import { AlertTriangle, CheckCircle } from "lucide-react";
 
 const ProductPage = () => {

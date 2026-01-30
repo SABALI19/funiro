@@ -12,6 +12,7 @@ import Footer from "./components/Footer";
 import FavoritesPage from "./pages/FavoritesPage";
 import ProfilePage from "./pages/ProfilePage";
 import SearchProductPage from "./pages/SearchProductPage";
+import OrderConfirmation from "./pages/OrderConfirmation";
 
 
 
@@ -34,6 +35,7 @@ const App =  () => {
           <Route path='/product/:id' element={<ProductPage/>}/>
           <Route path="/cart" element={<CartPage/>}/>
           <Route path='/checkout' element={<Checkout/>}/>
+          <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
         </Routes>
         <Footer />
       </CartProvider>
