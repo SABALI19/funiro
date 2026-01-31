@@ -17,16 +17,18 @@ function Shop() {
     onSale: false
   });
 
+  // Helper function to parse price
+  const parsePrice = (price) => {
+    if (typeof price === 'number') return price;
+    if (typeof price === 'string') {
+      return parseFloat(price.replace('$', '').replace(/,/g, '')) || 0;
+    }
+    return 0;
+  };
+
   // Calculate filtered and sorted products
   const filteredProducts = useMemo(() => {
     let filtered = [...products];
-
-    // helper to get numeric price from either number or string like "$1,234.00"
-    const parsePrice = (p) => {
-      if (typeof p === 'number') return p;
-      if (typeof p === 'string') return parseFloat(p.replace('$', '').replace(/,/g, '')) || 0;
-      return 0;
-    };
 
     // Apply filters
     if (filters.category) {
@@ -43,7 +45,7 @@ function Shop() {
       filtered = filtered.filter(product => product.discount);
     }
 
-    // Apply price range filter (support number or string prices)
+    // Apply price range filter
     filtered = filtered.filter(product => {
       const price = parsePrice(product.price);
       return price >= filters.priceRange[0] && price <= filters.priceRange[1];
@@ -74,7 +76,7 @@ function Shop() {
     }
 
     return filtered;
-  }, [sortOption, filters]); // Removed 'products' from dependencies
+  }, [sortOption, filters]);
 
   // Calculate pagination
   const totalPages = Math.ceil(filteredProducts.length / showCount);
@@ -85,69 +87,141 @@ function Shop() {
   // Handle page change
   const handlePageChange = (page) => {
     setCurrentPage(page);
+    // Scroll to top of products section
+    window.scrollTo({
+      top: document.querySelector('.products-section')?.offsetTop || 400,
+      behavior: 'smooth'
+    });
+  };
+
+  // Handle show count change
+  const handleShowCountChange = (count) => {
+    setShowCount(count);
+    setCurrentPage(1); // Reset to first page when changing items per page
+  };
+
+  // Handle filter reset
+  const handleResetFilters = () => {
+    setFilters({
+      category: '',
+      priceRange: [0, 10000],
+      inStock: false,
+      onSale: false
+    });
+    setSortOption('default');
+    setCurrentPage(1);
   };
 
   return (
-    <>
+    <div className="w-full min-h-screen">
       <div className="w-full">
-        <div className="w-full">
-          <HeroSection heroHeading="Shop" heroTitle="Shop" />
-        </div>
-        
-        {/* Filter Section with State */}
-        <div>
-          <FilterSection 
-            sortOption={sortOption}
-            setSortOption={setSortOption}
-            showCount={showCount}
-            setShowCount={setShowCount}
-            total={filteredProducts.length}
-            filters={filters}
-            setFilters={setFilters}
-          />
-        </div>
+        <HeroSection heroHeading="Shop" heroTitle="Shop" />
+      </div>
+      
+      {/* Filter Section */}
+      <div className="products-section">
+        <FilterSection 
+          sortOption={sortOption}
+          setSortOption={setSortOption}
+          showCount={showCount}
+          setShowCount={handleShowCountChange}
+          total={filteredProducts.length}
+          filters={filters}
+          setFilters={setFilters}
+          onReset={handleResetFilters}
+        />
+      </div>
 
-        {/* Products with filtered data */}
-        <div className="mb-12">
+      {/* Products Display */}
+      <div className="mb-12">
+        {currentProducts.length > 0 ? (
           <Products 
             products={currentProducts} 
             showButton={false}  
           />
-        </div>
-
-        {/* Pagination */}
-        <div className="flex w-full items-center justify-center gap-4 mt-4 mb-12">
-          {[...Array(totalPages)].map((_, index) => (
+        ) : (
+          <div className="text-center py-16">
+            <h3 className="text-2xl font-semibold text-gray-600 mb-4">No products found</h3>
+            <p className="text-gray-500 mb-6">Try adjusting your filters or search criteria</p>
             <button
-              key={index + 1}
-              onClick={() => handlePageChange(index + 1)}
-              className={`p-4 rounded-xl ${
-                currentPage === index + 1
-                  ? 'bg-[#B88E2F] text-white'
-                  : 'bg-[#F9F1E7] hover:bg-[#B88E2F] hover:text-white transition-colors'
-              }`}
+              onClick={handleResetFilters}
+              className="px-6 py-3 bg-[#B88E2F] text-white rounded-lg hover:bg-[#A37E27] transition-colors"
             >
-              {index + 1}
+              Reset All Filters
             </button>
-          ))}
+          </div>
+        )}
+      </div>
+
+      {/* Pagination */}
+      {filteredProducts.length > showCount && (
+        <div className="flex flex-wrap items-center justify-center gap-3 mt-4 mb-12 px-4">
+          {/* Previous Button */}
+          {currentPage > 1 && (
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              className="px-4 py-3 bg-[#F9F1E7] rounded-xl hover:bg-[#B88E2F] hover:text-white transition-colors font-medium"
+            >
+              Previous
+            </button>
+          )}
+
+          {/* Page Numbers */}
+          {[...Array(totalPages)].map((_, index) => {
+            const pageNum = index + 1;
+            // Show limited page numbers for better UX
+            if (
+              pageNum === 1 ||
+              pageNum === totalPages ||
+              (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+            ) {
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() => handlePageChange(pageNum)}
+                  className={`px-4 py-3 rounded-xl font-medium ${
+                    currentPage === pageNum
+                      ? 'bg-[#B88E2F] text-white'
+                      : 'bg-[#F9F1E7] hover:bg-[#B88E2F] hover:text-white transition-colors'
+                  }`}
+                >
+                  {pageNum}
+                </button>
+              );
+            } else if (
+              pageNum === currentPage - 2 ||
+              pageNum === currentPage + 2
+            ) {
+              return <span key={pageNum} className="px-2">...</span>;
+            }
+            return null;
+          })}
+
+          {/* Next Button */}
           {currentPage < totalPages && (
             <button
               onClick={() => handlePageChange(currentPage + 1)}
-              className="p-3 bg-[#F9F1E7] rounded-xl hover:bg-[#B88E2F] hover:text-white transition-colors"
+              className="px-4 py-3 bg-[#F9F1E7] rounded-xl hover:bg-[#B88E2F] hover:text-white transition-colors font-medium"
             >
               Next
             </button>
           )}
         </div>
+      )}
 
-        {/* Promise */}
-        <div>
-          <Promise/>
-        </div>
-
-       
+      {/* Items Per Page Info */}
+      <div className="text-center text-gray-600 mb-8">
+        <p>
+          Showing {Math.min(startIndex + 1, filteredProducts.length)} to{' '}
+          {Math.min(endIndex, filteredProducts.length)} of {filteredProducts.length} products
+        </p>
       </div>
-    </>
+
+      {/* Promise Section */}
+      <div className="mt-16">
+        <Promise />
+      </div>
+    </div>
   );
 }
 

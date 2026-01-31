@@ -4,18 +4,19 @@ import Products from "../components/home/products";
 import products from "../data/products";
 import RoomExplore from "../components/home/RoomExplore";
 import ImageGrid from "../components/home/ImageGrid";
+import { Link } from "react-router-dom";
 
 function Home() {
   return (
     <>
       {/* Hero Section - Responsive */}
       <div
-        className="relative w-full h-[500px] sm:h-[600px] md:h-[700px] lg:h-screen bg-cover bg-center p-4 sm:p-6 lg:p-8"
+        className="relative w-full h-125 sm:h-150 md:h-175 lg:h-screen bg-cover bg-center p-4 sm:p-6 lg:p-8"
         style={{ backgroundImage: "url('/images/home-hero.svg')" }}
       >
         {/* Content Box - Responsive positioning and sizing */}
-        <div className="absolute bottom-8 right-4 sm:bottom-12 sm:right-8 md:bottom-16 md:right-12 lg:bottom-20 lg:right-20 
-                        w-[calc(100%-2rem)] sm:w-[400px] md:w-[500px] lg:w-[560px] 
+        <div className="absolute rounded-xl opacity-85 bottom-8 right-4 sm:bottom-12 sm:right-8 md:bottom-16 md:right-12 lg:bottom-20 lg:right-20 
+                        w-[calc(100%-2rem)] sm:w-100 md:w-125 lg:w-140 
                         px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-10 lg:px-10 lg:py-12 
                         bg-color-pink tracking-widest">
           <p className="font-sans text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold">
@@ -30,9 +31,16 @@ function Home() {
           </p>
 
           {/* Reusable button - Responsive sizing */}
-          <Button variant="primary" size="lg" className="w-full sm:w-auto">
+         <Link to="/shop">
+          <Button 
+          variant="primary" 
+          size="md" 
+          className="w-full rounded-xl sm:w-auto"
+          
+          >
             Buy Now
           </Button>
+         </Link>
         </div>
       </div>
 
@@ -49,7 +57,7 @@ function Home() {
         <p className="text-gray-600 text-sm sm:text-base mb-6 sm:mb-8 px-4">
           Browse our amazing collection
         </p>
-        <Products products={products.slice(0, 8)} showButton={false} />
+        <Products products={products.slice(0, 8)} showButton={true} />
       </div>
 
       {/* Room Explore Section */}

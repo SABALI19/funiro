@@ -9,10 +9,21 @@ function Products({ showButton = true, products = [] }) {
   const handleAddToCart = (product, e) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    // Handle both string and number price formats
+    let priceValue;
+    if (typeof product.price === 'string') {
+      priceValue = parseFloat(product.price.replace('$', '').replace(/,/g, ''));
+    } else if (typeof product.price === 'number') {
+      priceValue = product.price;
+    } else {
+      priceValue = 0;
+    }
+    
     addToCart({
       id: product.id,
       name: product.name,
-      price: parseFloat(product.price.replace('$', '').replace(',', '')),
+      price: priceValue,
       image: product.image,
       quantity: 1
     });
@@ -73,7 +84,7 @@ function Products({ showButton = true, products = [] }) {
               </p>
               <div className="flex items-center gap-2 sm:gap-3">
                 <span className="font-semibold text-base sm:text-lg lg:text-xl text-gray-900">
-                  {product.price}
+                  {typeof product.price === 'number' ? `$${product.price.toFixed(2)}` : product.price}
                 </span>
                 {product.discountPrice && (
                   <span className="text-gray-400 line-through text-sm sm:text-base">
@@ -89,9 +100,11 @@ function Products({ showButton = true, products = [] }) {
       {/* Show More Button */}
       {showButton && (
         <div className="flex justify-center my-8 sm:my-10 lg:my-12 px-4">
-          <Button variant="outline" size="lg">
-            Show More
-          </Button>
+          <Link to="/shop">
+            <Button variant="primary" size="lg">
+              Show More
+            </Button>
+          </Link>
         </div>
       )}
     </>

@@ -36,7 +36,7 @@ function NavIcons() {
   </ul>
 
   {/* Mobile Bottom Navigation */}
-  <ul className="sm:hidden flex items-center justify-around bg-white border-t border-gray-200 fixed bottom-0 left-0 right-0 p-3 z-50">
+  <ul className="sm:hidden flex items-center justify-around bg-white border-t border-gray-200 fixed bottom-0 left-0 right-0 p-3 z-[9999] pb-[env(safe-area-inset-bottom)]">
     {icons.map((icon, index) => (
       <li key={index} className="relative">
         <NavLink 

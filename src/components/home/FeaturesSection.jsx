@@ -3,7 +3,7 @@ import React from 'react'
 const FeaturesSection = () => {
   return (
     <div className='w-full p-4 text-center justify-center mt-10'>
-        <h1 className='text-4xl font-extrabold font-poppins'>
+        <h1 className='text-2xl lg:text-4xl sm:text-4xl font-extrabold font-poppins'>
             Browse The Range 
         </h1>
         <p className='text-[#666666] font-poppins font-light mt-4'>
@@ -15,21 +15,21 @@ const FeaturesSection = () => {
              <img src="./images/dinning-pic.svg " 
              className='w-full rounded-lg ' 
              alt="dinning" />
-             <p className='text-center text-2xl my-4 font-semibold font-sans'>Dinning</p>
+             <p className='text-center sm:text-2xl lg:text-2xl  my-4 font-semibold font-sans'>Dinning</p>
            </div>
 
            <div className='w-1/4 '>
             <img src="./images/bedroom.svg"
             className='w-full rounded-lg'
              alt="bedroom" />
-            <p className='text-center text-2xl rounded-lg my-4 font-semibold font-sans'>Bedroom</p>
+            <p className='text-center sm:text-2xl lg:text-2xl  rounded-lg my-4 font-semibold font-sans'>Bedroom</p>
            </div>
 
            <div className='w-1/4 '>
             <img src="./images/livingroom.svg"
             className='w-full rounded-lg' 
             alt="livingroom" />
-            <p className='text-center text-2xl rounded-lg my-4 font-semibold font-sans'>Living Room</p>
+            <p className='text-center sm:text-2xl lg:text-2xl whitespace-nowrap rounded-lg my-4 font-semibold font-sans'>Living Room</p>
            </div>
            
         </div>

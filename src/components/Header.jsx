@@ -30,7 +30,7 @@ const Header = () => {
     }
 
     return (
-        <div className="w-full relative"> {/* ADD relative HERE */}
+        <div className="w-full relative z-9999"> {/* ADD relative HERE */}
             <header className="flex justify-between items-center w-full mx-auto py-4 px-4 sm:py-6 sm:px-8 lg:px-12 bg-white relative z-10"> {/* ADD bg-white and z-10 */}
                 
                 {/* Logo */}
@@ -38,7 +38,7 @@ const Header = () => {
                     <img 
                         src="../images/funiropic.svg" 
                         alt="brand logo"  
-                        className="w-24 h-8 sm:w-28 sm:h-9 lg:w-[120px] lg:h-10" 
+                        className="w-24 h-8 sm:w-28 sm:h-9 lg:w-30 lg:h-10" 
                     />
                 </NavLink>
 
