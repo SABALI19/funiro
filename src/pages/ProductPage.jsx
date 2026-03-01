@@ -1,24 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import products from "../data/products";
 import Breadcrumbs from "../components/Breadcrumbs";
 import { useCart } from "../hooks/useCart";
 import { AlertTriangle, CheckCircle } from "lucide-react";
+import axiosInstance from "../api/axios";
+import { normalizeProduct } from "../utils/normalizeProduct";
 
-const ProductPage = () => {
+function ProductPage() {
+  const [product, setProduct] = useState(null);
   const { id } = useParams();
   const { addToCart } = useCart();
-  const product = products.find((item) => item.id === parseInt(id));
-  const [mainImage, setMainImage] = useState(
-    product?.images?.[0] || product?.image || ""
-  );
+  const [mainImage, setMainImage] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
-  
+  const [loading, setLoading] = useState(true);
+
   // Modal states
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState(""); // 'warning' or 'success'
   const [modalMessage, setModalMessage] = useState("");
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        setLoading(true);
+        const response = await axiosInstance.get(`furniture/furniture-details/${id}`);
+        const productData = normalizeProduct(response.data?.data ?? response.data);
+        
+        setProduct(productData);
+        // Set main image from API response
+        setMainImage(productData?.images?.[0] || productData?.image || "");
+      } catch (error) {
+        console.error("Error fetching furniture details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
 
   // Function to play notification sound
   const playNotificationSound = (type) => {
@@ -51,10 +71,21 @@ const ProductPage = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#B88E2F] mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading product details...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!product) {
     return (
       <div className="text-center mt-20 text-red-500">
-        <h2>Product not found</h2>
+        <h2 className="text-2xl font-semibold mb-4">Product not found</h2>
         <Link
           to="/"
           className="bg-[#B88E2F] text-white px-6 py-3 rounded-lg hover:bg-[#a07d28] transition"
@@ -65,7 +96,7 @@ const ProductPage = () => {
     );
   }
 
-  const gallery = product.images || [product.image];
+  const gallery = product.images?.length ? product.images : [product.image].filter(Boolean);
 
   // Function to render star ratings
   const renderStars = (rating) => {
@@ -87,11 +118,11 @@ const ProductPage = () => {
       // Show warning modal
       setModalType("warning");
       if (!selectedSize && !selectedColor) {
-        setModalMessage("select size and color before adding to cart.");
+        setModalMessage("Select size and color before adding to cart.");
       } else if (!selectedSize) {
-        setModalMessage("select size before adding to cart.");
+        setModalMessage("Select size before adding to cart.");
       } else {
-        setModalMessage("select  color before adding to cart.");
+        setModalMessage("Select color before adding to cart.");
       }
       setShowModal(true);
       playNotificationSound("warning"); // Play warning sound
@@ -100,8 +131,8 @@ const ProductPage = () => {
 
     // Add to cart
     addToCart({
-      id: product.id,
-      name: product.name,
+      id: product.id || product._id,
+      name: product.name || product.title,
       price: product.price,
       image: mainImage,
       size: selectedSize,
@@ -111,7 +142,7 @@ const ProductPage = () => {
 
     // Show success modal
     setModalType("success");
-    setModalMessage(`${product.name} has been successfully added to your cart!`);
+    setModalMessage(`${product.name || product.title} has been successfully added to your cart!`);
     setShowModal(true);
     playNotificationSound("success"); // Play success sound
   };
@@ -123,11 +154,11 @@ const ProductPage = () => {
 
   return (
     <div className="w-full">
-      <Breadcrumbs productName={product.name} />
+      <Breadcrumbs productName={product.name || product.title} />
 
       <div className="flex flex-col md:flex-row gap-8 p-10 max-w-7xl mx-auto">
         {/* Thumbnails */}
-        <div className="flex md:flex-col gap-3 w-full md:w-[120px] justify-center md:justify-start">
+        <div className="flex md:flex-col gap-3 w-full md:w-30 justify-center md:justify-start">
           {gallery.map((img, index) => (
             <img
               key={index}
@@ -145,8 +176,8 @@ const ProductPage = () => {
         <div className="flex-1 flex justify-center items-center">
           <img
             src={mainImage}
-            alt={product.name}
-            className="w-full max-w-[600px] h-auto rounded-xl object-cover shadow-md"
+            alt={product.name || product.title}
+            className="w-full max-w-150 h-auto rounded-xl object-cover shadow-md"
           />
         </div>
 
@@ -154,7 +185,7 @@ const ProductPage = () => {
         <div className="flex-1 flex flex-col gap-6">
           {/* Product Name */}
           <h1 className="text-3xl font-semibold font-poppins text-[#3A3A3A]">
-            {product.name}
+            {product.name || product.title}
           </h1>
 
           {/* Price */}
@@ -165,17 +196,17 @@ const ProductPage = () => {
           {/* Reviews Section - Positioned here */}
           <div className="flex items-center gap-4">
             <div className="flex">
-              {renderStars(product.averageRating || 5)}
+              {renderStars(product.averageRating || product.rating || 5)}
             </div>
             <span className="text-gray-600 border-l border-gray-300 pl-4">
-              {product.reviewCount || 5} Customer Review
-              {product.reviewCount !== 1 ? "s" : ""}
+              {product.reviewCount || product.reviews?.length || 5} Customer Review
+              {(product.reviewCount || product.reviews?.length || 5) !== 1 ? "s" : ""}
             </span>
           </div>
 
           {/* Product Description */}
           <p className="text-[#616161] text-lg font-poppins">
-            {product.description ||
+            {product.description || product.details || 
               "Setting the bar as one of the loudest speakers in its class, the Kilburn is a compact, stout-hearted hero with a well-balanced audio which boasts a clear midrange and extended highs for a sound."}
           </p>
 
@@ -240,46 +271,45 @@ const ProductPage = () => {
 
       {/* Modal */}
       {showModal && (
-  <div
-    className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn"
-    onClick={closeModal}
-  >
-    <div
-      className="bg-white rounded-2xl p-4 shadow-2xl animate-slideUp max-w-md w-85 mx-4"
-      onClick={(e) => e.stopPropagation()}
-    >
-      {/* Modal Icon */}
-      {modalType === "warning" ? (
-  <AlertTriangle className="text-5xl text-orange-500 mx-auto" />
-) : (
-  <CheckCircle className="text-5xl text-green-500 mx-auto" />
-)}
+        <div
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn"
+          onClick={closeModal}
+        >
+          <div
+            className="bg-white rounded-2xl p-4 shadow-2xl animate-slideUp max-w-md w-85 mx-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Icon */}
+            {modalType === "warning" ? (
+              <AlertTriangle className="text-5xl text-orange-500 mx-auto" />
+            ) : (
+              <CheckCircle className="text-5xl text-green-500 mx-auto" />
+            )}
 
-      {/* Modal Title */}
-      <h2 className="text-lg font-bold text-center text-[#3A3A3A] mb-3">
-        {modalType === "warning" ? "Selection Required" : "Added to Cart!"}
-      </h2>
+            {/* Modal Title */}
+            <h2 className="text-lg font-bold text-center text-[#3A3A3A] mb-3">
+              {modalType === "warning" ? "Selection Required" : "Added to Cart!"}
+            </h2>
 
-      {/* Modal Message */}
-      <p className="text-center text-gray-600 text-sm mb-4">
-        {modalMessage}
-      </p>
+            {/* Modal Message */}
+            <p className="text-center text-gray-600 text-sm mb-4">
+              {modalMessage}
+            </p>
 
-      {/* Modal Button */}
-      <button
-        onClick={closeModal}
-        className={`w-1/4 flex justify-center m-auto p-2 rounded-lg text-sm font-semibold text-white transition-all ${
-          modalType === "warning"
-            ? "bg-[#B88E2F] hover:bg-orange-600"
-            : "bg-[#B88E2F] hover:bg-[#a07b26]"
-        }`}
-      >
-        OK
-      </button>
-    </div>
-  </div>
-)}
-      
+            {/* Modal Button */}
+            <button
+              onClick={closeModal}
+              className={`w-1/4 flex justify-center m-auto p-2 rounded-lg text-sm font-semibold text-white transition-all ${
+                modalType === "warning"
+                  ? "bg-[#B88E2F] hover:bg-orange-600"
+                  : "bg-[#B88E2F] hover:bg-[#a07b26]"
+              }`}
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

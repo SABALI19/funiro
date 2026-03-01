@@ -2,6 +2,10 @@ import React from "react";
 import Button from "../Button";
 import { Link } from "react-router-dom";
 import { useCart } from "../../hooks/useCart";
+// import axios from "axios";
+
+
+
 
 function Products({ showButton = true, products = [] }) {
   const { addToCart } = useCart();
@@ -21,10 +25,10 @@ function Products({ showButton = true, products = [] }) {
     }
     
     addToCart({
-      id: product.id,
+      id: product.id || product._id,
       name: product.name,
       price: priceValue,
-      image: product.image,
+      image: product.image || product.images?.[0] || "",
       quantity: 1
     });
   };
@@ -32,11 +36,12 @@ function Products({ showButton = true, products = [] }) {
   return (
     <>
       {/* Products Grid - Responsive columns */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 px-4 sm:px-6 lg:px-8 py-8">
-        {products.map((product) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 px-4 sm:px-6 lg:px-6 py-8">
+        {/* getting a product */}
+        {products.map((product, index) => (
           <Link
-            to={`/product/${product.id}`}
-            key={product.id}
+            to={`/product/${product.id || product._id}`}
+            key={product.id || product._id || index}
             className="group relative bg-gray-100 overflow-hidden transition-all duration-300 hover:shadow-xl"
           >
             {/* Discount & newItem badges */}
@@ -56,7 +61,7 @@ function Products({ showButton = true, products = [] }) {
             {/* Product Image */}
             <div className="relative overflow-hidden aspect-square">
               <img
-                src={product.image}
+                src={product.image || product.images?.[0] || ""}
                 alt={product.name}
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
               />
@@ -84,7 +89,7 @@ function Products({ showButton = true, products = [] }) {
               </p>
               <div className="flex items-center gap-2 sm:gap-3">
                 <span className="font-semibold text-base sm:text-lg lg:text-xl text-gray-900">
-                  {typeof product.price === 'number' ? `$${product.price.toFixed(2)}` : product.price}
+                  {typeof product.price === 'number' ? `${product.price.toFixed(2)}` : product.price}
                 </span>
                 {product.discountPrice && (
                   <span className="text-gray-400 line-through text-sm sm:text-base">

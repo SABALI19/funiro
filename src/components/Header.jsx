@@ -64,6 +64,8 @@ const Header = () => {
                     </ul>
                 </nav>
 
+                
+
                 {/* Icons + Mobile Menu Button */}
                 <div className="flex items-center gap-4 sm:gap-6">
                     <NavIcons />

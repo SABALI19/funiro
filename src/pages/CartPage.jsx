@@ -1,5 +1,4 @@
 import { Navigate } from "react-router-dom";
-import Footer from "../components/Footer";
 import HeroSection from "../components/HeroSection";
 import Promise from "../components/Promise";
 import { useCart } from "../hooks/useCart";
@@ -113,7 +112,7 @@ const CartPage = () => {
                         <img 
                           src={item.image} 
                           alt={item.name}
-                          className="w-16 h-16 rounded-md object-cover flex-shrink-0" 
+                          className="w-16 h-16 rounded-md object-cover shrink-0" 
                         />
                         <div className="flex-1">
                           <p className="font-medium text-sm mb-1">{item.name}</p>

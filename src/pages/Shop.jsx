@@ -1,12 +1,16 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import HeroSection from "../components/HeroSection";
 import Products from "../components/home/products";
 import Promise from "../components/Promise";
 import FilterSection from "../components/FilterSection";
-import Footer from "../components/Footer";
-import products from "../data/products";
+import axiosInstance from "../api/axios";
+import { normalizeProducts } from "../utils/normalizeProduct";
 
 function Shop() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
   const [sortOption, setSortOption] = useState('default');
   const [showCount, setShowCount] = useState(8);
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,6 +20,35 @@ function Shop() {
     inStock: false,
     onSale: false
   });
+
+  // Fetch products data from API
+  useEffect(() => {
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await axiosInstance.get("furniture/all-furniture");
+      const normalizedProducts = normalizeProducts(response.data?.data);
+      setProducts(normalizedProducts);
+    } catch (err) {
+      console.error('Error fetching products:', err);
+      setProducts([]);
+
+      if (err.response) {
+        setError(`Server Error: ${err.response.status} - ${err.response.data.message || 'Failed to fetch products'}`);
+      } else if (err.request) {
+        setError('No response from server. Please check your connection.');
+      } else {
+        setError(err.message || 'Failed to fetch products');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchProducts();
+}, []);
 
   // Helper function to parse price
   const parsePrice = (price) => {
@@ -54,7 +87,7 @@ function Shop() {
     // Apply sorting
     switch (sortOption) {
       case 'latest':
-        filtered.sort((a, b) => b.id - a.id);
+        filtered.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
         break;
       case 'lowToHigh':
         filtered.sort((a, b) => {
@@ -71,12 +104,11 @@ function Shop() {
         });
         break;
       default:
-        // Default sorting - keep original order
         break;
     }
 
     return filtered;
-  }, [sortOption, filters]);
+  }, [sortOption, filters, products]);
 
   // Calculate pagination
   const totalPages = Math.ceil(filteredProducts.length / showCount);
@@ -87,7 +119,6 @@ function Shop() {
   // Handle page change
   const handlePageChange = (page) => {
     setCurrentPage(page);
-    // Scroll to top of products section
     window.scrollTo({
       top: document.querySelector('.products-section')?.offsetTop || 400,
       behavior: 'smooth'
@@ -97,7 +128,7 @@ function Shop() {
   // Handle show count change
   const handleShowCountChange = (count) => {
     setShowCount(count);
-    setCurrentPage(1); // Reset to first page when changing items per page
+    setCurrentPage(1);
   };
 
   // Handle filter reset
@@ -111,6 +142,37 @@ function Shop() {
     setSortOption('default');
     setCurrentPage(1);
   };
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="w-full min-h-screen">
+        <HeroSection heroHeading="Shop" heroTitle="Shop" />
+        <div className="flex items-center justify-center py-20">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#B88E2F]"></div>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="w-full min-h-screen">
+        <HeroSection heroHeading="Shop" heroTitle="Shop" />
+        <div className="text-center py-20">
+          <h3 className="text-2xl font-semibold text-red-600 mb-4">Error Loading Products</h3>
+          <p className="text-gray-500 mb-6">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-6 py-3 bg-[#B88E2F] text-white rounded-lg hover:bg-[#A37E27] transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full min-h-screen">
@@ -169,7 +231,6 @@ function Shop() {
           {/* Page Numbers */}
           {[...Array(totalPages)].map((_, index) => {
             const pageNum = index + 1;
-            // Show limited page numbers for better UX
             if (
               pageNum === 1 ||
               pageNum === totalPages ||
