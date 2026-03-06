@@ -15,6 +15,7 @@ import SearchProductPage from "./pages/SearchProductPage";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
+import ScrollToTop from "./components/scrollToTop.jsx";
 
 
 
@@ -24,7 +25,7 @@ const App =  () => {
     <div>
       <BrowserRouter>
       <CartProvider>
-        
+        <ScrollToTop/>
         <Header/>
         <Routes>
           <Route path='/login' element={<Login/>} />
